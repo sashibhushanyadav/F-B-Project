@@ -2,6 +2,13 @@ import Container from "@mui/material/Container";
 import { Row, Col, Form } from "react-bootstrap";
 import { TextField, Button } from "@mui/material";
 import { useState } from "react";
+import {
+  errorToast,
+  successToast,
+  warningToast,
+} from "../../../services/toaster.services";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -9,18 +16,37 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState("");
-  
-  const registerSubmitHandler = (e: any) => {
-    e.preventdefault();
-    console.log({
-      email,
-      name,
-      password,
-    });
+  const navigate = useNavigate();
+
+  const registerSubmitHandler = async (e: any) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      warningToast("Password and Confirm Password must be same");
+    } else {
+      const data = {
+        name,
+        email,
+        password,
+        // confirmPassword
+      };
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/auth/register",
+          data
+        );
+        if (response.data.status) {
+          navigate("/");
+          successToast(response.data.message);
+        }
+      } catch (error: any) {
+        errorToast(error.response.data.error);
+      }
+    }
   };
   return (
     <Container>
-      <Row className="d-flex justify-content-between">
+      <Row className="d-flex justify-content-center">
         <Col xs={12} md={6}>
           <h1>Sign Up</h1>
           <Form onSubmit={registerSubmitHandler}>
