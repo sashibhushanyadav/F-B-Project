@@ -9,6 +9,7 @@ import {
 } from "../../../services/toaster.services";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { config } from "../../../config";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -32,7 +33,7 @@ const SignUp = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/v1/auth/register",
+          `${config.SERVER_URL}/auth/register`,
           data
         );
         if (response.data.status) {
@@ -45,62 +46,64 @@ const SignUp = () => {
     }
   };
   return (
-    <Container>
-      <Row className="d-flex justify-content-center">
-        <Col xs={12} md={6}>
-          <h1>Sign Up</h1>
-          <Form onSubmit={registerSubmitHandler}>
-            <TextField
-              id="name"
-              label="Name"
-              variant="outlined"
-              className="mb-4"
-              required
-              fullWidth
-              autoFocus
-              placeholder="Enter name here"
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-              id="email"
-              label="Email"
-              variant="outlined"
-              className="mb-4"
-              required
-              fullWidth
-              autoFocus
-              placeholder="Enter Your Email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              id="password"
-              label="Password"
-              variant="outlined"
-              className="mb-4"
-              required
-              fullWidth
-              autoFocus
-              placeholder="Enter Your Password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <TextField
-              id="confirm-password"
-              label="Confirm-Password"
-              variant="outlined"
-              className="mb-4"
-              required
-              fullWidth
-              autoFocus
-              placeholder="Re-Enter Your Password"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <Button type="submit" variant="contained">
-              Sign-Up
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+    <div className="">
+      <Container>
+        <Row className="d-flex justify-content-center">
+          <Col xs={12} md={6}>
+            <h1>Sign Up</h1>
+            <Form onSubmit={registerSubmitHandler}>
+              <TextField
+                id="name"
+                label="Name"
+                variant="outlined"
+                className="mb-4"
+                required
+                fullWidth
+                autoFocus
+                placeholder="Enter name here"
+                onChange={(e) => setName(e.target.value)}
+              />
+              <TextField
+                id="email"
+                label="Email"
+                variant="outlined"
+                className="mb-4"
+                required
+                fullWidth
+                autoFocus
+                placeholder="Enter Your Email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                id="password"
+                label="Password"
+                variant="outlined"
+                className="mb-4"
+                required
+                fullWidth
+                autoFocus
+                placeholder="Enter Your Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <TextField
+                id="confirm-password"
+                label="Confirm-Password"
+                variant="outlined"
+                className="mb-4"
+                required
+                fullWidth
+                autoFocus
+                placeholder="Re-Enter Your Password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <Button type="submit" variant="contained">
+                Sign-Up
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 
