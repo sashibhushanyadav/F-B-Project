@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { config } from "../../../config";
+import { postData } from "../../../services/axios.service";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -30,18 +31,10 @@ const SignUp = () => {
         password,
         // confirmPassword
       };
-
-      try {
-        const response = await axios.post(
-          `${config.SERVER_URL}/auth/register`,
-          data
-        );
-        if (response.data.status) {
-          navigate("/");
-          successToast(response.data.message);
-        }
-      } catch (error: any) {
-        errorToast(error.response.data.error);
+      const response = await postData("/auth/register", data);
+      if (response.status) {
+        navigate("/");
+        successToast(response.message);
       }
     }
   };
