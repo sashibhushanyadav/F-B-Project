@@ -6,13 +6,18 @@ import { AuthInterface } from "../../../interface/auth.interface";
 import { postData } from "../../../services/axios.service";
 import { useNavigate } from "react-router-dom";
 import { successToast } from "../../../services/toaster.services";
+import { useDispatch } from "react-redux";
+import { login } from "../../../slice/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   let initialValues = {
     email: "",
     password: "",
   };
-  const navigate = useNavigate();
+
   let authValidationSchema = object({
     email: string().email().required("Email is a required field"),
     password: string()
@@ -22,8 +27,13 @@ const Login = () => {
 
   const loginHandler = async (values: AuthInterface) => {
     const resp = await postData("/auth/login", values);
-    debugger;
     if (resp.status === "success") {
+      const data = {
+        jwt: resp.token,
+        role: resp.authData.role,
+        email: resp.authData.email,
+      };
+      dispatch(login(data));
       navigate("/products");
       successToast("User logged in successfully");
     }
