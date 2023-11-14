@@ -13,6 +13,10 @@ import moment from "moment";
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
 import { Button } from "react-bootstrap";
+import { config } from "../../../config";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { errorToast } from "../../../services/toaster.services";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,12 +41,32 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Products = () => {
   const [products, setProducts] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { jwt } = useSelector((state: any) => state.auth);
 
   const getProducts = async () => {
     setIsLoading(true);
     const resp = await getData("/product");
     setProducts(resp.data);
     setIsLoading(false);
+  };
+  const deleteProduct = async (id: string) => {
+    try {
+      const resp = await axios.delete(`${config.SERVER_URL}/product/${id}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      console.log(resp)
+    } catch (error: any) {
+      errorToast(error.response.data.error);
+    }
+    // OLD WAY
+    // const deleteHandler = products.results.filter((product: any) => {
+    //   return product.id !== id;
+    // });
+    // setProducts((prev:any) => {
+    //   return { ...prev, results: deleteHandler };
+    // });
   };
   useEffect(() => {
     getProducts();
@@ -105,7 +129,10 @@ const Products = () => {
                         <Button variant="primary" className="me-2">
                           <FaEdit />
                         </Button>
-                        <Button variant="danger">
+                        <Button
+                          variant="danger"
+                          onClick={(e) => deleteProduct(product.id)}
+                        >
                           <AiFillDelete />
                         </Button>
                       </StyledTableCell>
