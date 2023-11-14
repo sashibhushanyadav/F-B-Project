@@ -56,7 +56,7 @@ const Products = () => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log(resp)
+      console.log(resp);
     } catch (error: any) {
       errorToast(error.response.data.error);
     }
@@ -84,7 +84,6 @@ const Products = () => {
                   <StyledTableCell>Image</StyledTableCell>
                   <StyledTableCell align="left">Name</StyledTableCell>
                   <StyledTableCell align="left">Price</StyledTableCell>
-                  <StyledTableCell align="left">Stock</StyledTableCell>
                   <StyledTableCell align="left">Category</StyledTableCell>
                   <StyledTableCell align="left">Brand</StyledTableCell>
                   <StyledTableCell align="left">Created At</StyledTableCell>
@@ -107,9 +106,6 @@ const Products = () => {
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {product.price}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {product.countInStock}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {product.category}
