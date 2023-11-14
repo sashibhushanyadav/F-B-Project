@@ -17,6 +17,8 @@ import { config } from "../../../config";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { errorToast } from "../../../services/toaster.services";
+import { Container } from "@mui/material";
+import ProductFormModal from "../../../components/admin/forms/ProductFormModal";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,13 +42,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Products = () => {
   const [products, setProducts] = useState<any>({});
+  const [categories, setCategories] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const { jwt } = useSelector((state: any) => state.auth);
 
   const getProducts = async () => {
     setIsLoading(true);
     const resp = await getData("/product");
     setProducts(resp.data);
+    const newCategories = resp.data.results.map((result: any) => {
+      return result.category;
+    });
+    setCategories([...new Set(newCategories)]);
     setIsLoading(false);
   };
   const deleteProduct = async (id: string) => {
@@ -56,27 +64,35 @@ const Products = () => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log(resp);
+      const deleteHandler = products.results.filter((product: any) => {
+        return product.id !== id;
+      });
+      setProducts((prev: any) => {
+        return { ...prev, results: deleteHandler };
+      });
     } catch (error: any) {
       errorToast(error.response.data.error);
     }
-    // OLD WAY
-    // const deleteHandler = products.results.filter((product: any) => {
-    //   return product.id !== id;
-    // });
-    // setProducts((prev:any) => {
-    //   return { ...prev, results: deleteHandler };
-    // });
   };
   useEffect(() => {
     getProducts();
   }, []);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <TableContainer component={Paper}>
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <Container>
+          <Button variant="primary" className="mb-3" onClick={handleClickOpen}>
+            Add Product
+          </Button>
           {products.status === "success" && (
             <Table sx={{ minWidth: 100 }} aria-label="customized table">
               <TableHead>
@@ -138,7 +154,12 @@ const Products = () => {
               </TableBody>
             </Table>
           )}
-        </>
+          <ProductFormModal
+            open={open}
+            handleClose={handleClose}
+            categories={categories}
+          />
+        </Container>
       )}
     </TableContainer>
   );
