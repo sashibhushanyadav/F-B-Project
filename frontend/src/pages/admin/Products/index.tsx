@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { getData } from "../../../services/axios.service";
+import { getData, updateData } from "../../../services/axios.service";
 import Loader from "../../../components/Loader";
 import moment from "moment";
 import { FaEdit } from "react-icons/fa";
@@ -55,6 +55,7 @@ const Products = () => {
   const [categories, setCategories] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
   const { jwt } = useSelector((state: any) => state.auth);
 
   const getProducts = async () => {
@@ -145,12 +146,55 @@ const Products = () => {
     }
   };
 
+  const handleUpdate = async (e: any) => {
+    e.preventDefault();
+    // delete product['id/_id/createAt']
+    const resp = await updateData(`/product/${product.id}`, product, jwt);
+    if (resp.status === "success") {
+      const updatedProd = products.results.map((prod: any) => {
+        return prod.id === product.id ? resp.data : prod;
+      });
+
+      setProducts((prev: any) => {
+        return { ...prev, results: updatedProd };
+      });
+      setOpen(false);
+      setEdit(false);
+    }
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setEdit(false);
+    setProduct({
+      name: "",
+      brand: "",
+      price: "",
+      description: "",
+      category: "",
+      productImage: "",
+      countInStock: "",
+    });
+  };
+
+  interface ProductInterface {
+    name: string;
+    brand: string;
+    category: string;
+    description: string;
+    price: string;
+    countInStock: string;
+    productImage: string;
+  }
+
+  const editProduct = (product: ProductInterface) => {
+    setOpen(true);
+    setEdit(true);
+    setProduct(product);
   };
   return (
     <TableContainer component={Paper}>
@@ -168,6 +212,7 @@ const Products = () => {
                   <StyledTableCell>Image</StyledTableCell>
                   <StyledTableCell align="left">Name</StyledTableCell>
                   <StyledTableCell align="left">Price</StyledTableCell>
+                  <StyledTableCell align="left">Stock</StyledTableCell>
                   <StyledTableCell align="left">Category</StyledTableCell>
                   <StyledTableCell align="left">Brand</StyledTableCell>
                   <StyledTableCell align="left">Created At</StyledTableCell>
@@ -192,6 +237,9 @@ const Products = () => {
                         {product.price}
                       </StyledTableCell>
                       <StyledTableCell align="left">
+                        {product.countInStock}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
                         {product.category}
                       </StyledTableCell>
                       <StyledTableCell align="left">
@@ -206,7 +254,11 @@ const Products = () => {
                         {moment(product.createdAt).format("MMM Do YYYY")}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        <Button variant="primary" className="me-2">
+                        <Button
+                          variant="primary"
+                          className="m-2"
+                          onClick={(e) => editProduct(product)}
+                        >
                           <FaEdit />
                         </Button>
                         <Button
@@ -228,7 +280,10 @@ const Products = () => {
             categories={categories}
             handleChange={handleChange}
             handleSubmit={handleSubmit}
+            handleUpdate={handleUpdate}
             isSpinning={isSpinning}
+            edit={edit}
+            product={product}
           />
         </Container>
       )}
