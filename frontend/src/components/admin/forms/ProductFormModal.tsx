@@ -7,11 +7,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Col, Row } from "react-bootstrap";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import ButtonSpinner from "../../Loader/Spinner";
 
 export default function ProductFormModal({
   open,
   handleClose,
   categories,
+  handleChange,
+  handleSubmit,
+  isSpinning,
 }: any) {
   return (
     <React.Fragment>
@@ -28,7 +32,9 @@ export default function ProductFormModal({
                 label="Product Name"
                 type="text"
                 fullWidth
+                required
                 variant="outlined"
+                onChange={handleChange}
               />
             </Col>
             <Col>
@@ -40,7 +46,9 @@ export default function ProductFormModal({
                 label="Product Brand"
                 type="text"
                 fullWidth
+                required
                 variant="outlined"
+                onChange={handleChange}
               />
             </Col>
           </Row>
@@ -54,7 +62,9 @@ export default function ProductFormModal({
                 label="Product Price"
                 type="number"
                 fullWidth
+                required
                 variant="outlined"
+                onChange={handleChange}
               />
             </Col>
             <Col>
@@ -66,7 +76,9 @@ export default function ProductFormModal({
                 label="Product Stock"
                 type="number"
                 fullWidth
+                required
                 variant="outlined"
+                onChange={handleChange}
               />
             </Col>
           </Row>
@@ -74,7 +86,11 @@ export default function ProductFormModal({
             <Col md={6}>
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
-                <Select label="Category" name="category">
+                <Select
+                  label="Category"
+                  name="category"
+                  onChange={handleChange}
+                >
                   <MenuItem value="">Select category here</MenuItem>
                   {categories.map((category: any) => {
                     return (
@@ -95,7 +111,9 @@ export default function ProductFormModal({
                 label="Product Description"
                 type="text"
                 fullWidth
+                required
                 variant="outlined"
+                onChange={handleChange}
               />
             </Col>
           </Row>
@@ -107,14 +125,22 @@ export default function ProductFormModal({
                 name="productImage"
                 type="file"
                 fullWidth
+                required
                 variant="outlined"
+                onChange={handleChange}
               />
             </Col>
           </Row>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Button
+            variant="outlined"
+            disabled={isSpinning}
+            onClick={handleSubmit}
+          >
+            {isSpinning ? <ButtonSpinner /> : "Submit"}
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

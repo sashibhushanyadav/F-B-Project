@@ -16,7 +16,7 @@ import { Button } from "react-bootstrap";
 import { config } from "../../../config";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { errorToast } from "../../../services/toaster.services";
+import { errorToast, successToast } from "../../../services/toaster.services";
 import { Container } from "@mui/material";
 import ProductFormModal from "../../../components/admin/forms/ProductFormModal";
 
@@ -42,6 +42,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Products = () => {
   const [products, setProducts] = useState<any>({});
+  const [isSpinning, setIsSpinning] = useState<any>(false);
+  const [product, setProduct] = useState<any>({
+    name: "",
+    brand: "",
+    price: "",
+    description: "",
+    category: "",
+    productImage: "",
+    countInStock: "",
+  });
   const [categories, setCategories] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -57,6 +67,7 @@ const Products = () => {
     setCategories([...new Set(newCategories)]);
     setIsLoading(false);
   };
+
   const deleteProduct = async (id: string) => {
     try {
       const resp = await axios.delete(`${config.SERVER_URL}/product/${id}`, {
@@ -77,6 +88,63 @@ const Products = () => {
   useEffect(() => {
     getProducts();
   }, []);
+
+  const handleChange = (e: any) => {
+    // setProduct((prev: any) => {
+    //   return {
+    //     ...prev,
+    //     [e.target.name]:
+    //       e.target.name === "productImage" ? e.target.files[0] : e.target.value,
+    //   };
+    // });
+    if (e.target.name === "productImage") {
+      setProduct((prev: any) => {
+        return { ...prev, [e.target.name]: e.target.files[0] };
+      });
+    } else {
+      setProduct((prev: any) => {
+        return { ...prev, [e.target.name]: e.target.value };
+      });
+    }
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setIsSpinning(true);
+
+    const formData = new FormData();
+    formData.append("name", product.name);
+    formData.append("price", product.price);
+    formData.append("category", product.category);
+    formData.append("brand", product.brand);
+    formData.append("countInStock", product.countInStock);
+    formData.append("description", product.description);
+    formData.append("productImage", product.productImage);
+
+    try {
+      const { data } = await axios.post(
+        `${config.SERVER_URL}/product`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      if (data.status === "success") {
+        setProducts((prev: any) => {
+          return { ...prev, results: [data.data, ...prev.results] };
+        });
+        successToast("Product added successfully");
+        setOpen(false);
+        setIsSpinning(false);
+      }
+    } catch (error: any) {
+      errorToast(error.response.data.error);
+      setIsSpinning(false);
+    }
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -158,6 +226,9 @@ const Products = () => {
             open={open}
             handleClose={handleClose}
             categories={categories}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            isSpinning={isSpinning}
           />
         </Container>
       )}
