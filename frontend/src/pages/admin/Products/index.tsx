@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { errorToast, successToast } from "../../../services/toaster.services";
 import { Container } from "@mui/material";
 import ProductFormModal from "../../../components/admin/forms/ProductFormModal";
+import NavbarComponent from "../../../components/Navbar";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -202,6 +203,7 @@ const Products = () => {
         <Loader />
       ) : (
         <Container>
+          <NavbarComponent />
           <Button variant="primary" className="mb-3" onClick={handleClickOpen}>
             Add Product
           </Button>
