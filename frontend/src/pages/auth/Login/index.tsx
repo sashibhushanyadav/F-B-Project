@@ -32,16 +32,21 @@ const Login = () => {
         jwt: resp.token,
         role: resp.authData.role,
         email: resp.authData.email,
+        name: resp.authData.name,
       };
       dispatch(login(data));
-      navigate("/products");
+      if (resp.authData.role === "admin") {
+        navigate("/products");
+      } else if (resp.authData.role === "user") {
+        navigate("/all/products");
+      }
       successToast("User logged in successfully");
     }
   };
   return (
     <>
       <Container>
-        <Row className="d-flex justify-content-center">
+        <Row className="vh-100 d-flex justify-content-center align-items-center">
           <Col xs={12} md={6}>
             <h1>Log In</h1>
             <Formik

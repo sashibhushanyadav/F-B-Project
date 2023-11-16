@@ -41,7 +41,7 @@ const SignUp = () => {
   return (
     <div className="">
       <Container>
-        <Row className="d-flex justify-content-center">
+        <Row className="vh-100 d-flex justify-content-center align-items-center">
           <Col xs={12} md={6}>
             <h1>Sign Up</h1>
             <Form onSubmit={registerSubmitHandler}>
