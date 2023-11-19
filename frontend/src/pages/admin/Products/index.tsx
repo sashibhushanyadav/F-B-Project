@@ -48,7 +48,7 @@ const Products = () => {
   const [itemOffset, setItemOffset] = useState(0);
   const [pageCount, setPageCount] = useState(0);
 
-  let itemsPerPage = 4;
+  let itemsPerPage = 8;
   const [product, setProduct] = useState<any>({
     name: "",
     brand: "",
@@ -89,7 +89,7 @@ const Products = () => {
   function paginate(items: any) {
     const endOffset = itemOffset + itemsPerPage;
     // generate data according to items per page
-    const currentItems = items.results.slice(itemOffset + endOffset);
+    const currentItems = items.results.slice(itemOffset, endOffset);
     // calculate total pages
     setPageCount(Math.ceil(items.results.length / itemsPerPage));
 
