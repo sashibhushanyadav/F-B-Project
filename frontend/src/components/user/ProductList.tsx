@@ -1,4 +1,3 @@
-
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -12,15 +11,17 @@ import moment from "moment";
 import { BsCartCheckFill } from "react-icons/bs";
 import { BsEyeFill } from "react-icons/bs";
 import { Rating } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 // import Rating from "../Rating";
 
 const ProductList = ({ product }: any) => {
+  const navigate = useNavigate();
   return (
     <Card sx={{ maxWidth: 345, marginBottom: "2rem" }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
+            {product.name[0]}
           </Avatar>
         }
         action={
@@ -39,15 +40,25 @@ const ProductList = ({ product }: any) => {
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {product.description}
+          {product.description.length > 40
+            ? product.description.slice(0, 39) + "..."
+            : product.description}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           ${product.price}
         </Typography>
-        <Rating name="read-only" value={product.averageRating} precision={0.5} readOnly />
+        <Rating
+          name="read-only"
+          value={product.averageRating}
+          precision={0.5}
+          readOnly
+        />
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="share">
+        <IconButton
+          aria-label="share"
+          onClick={(e) => navigate(`/products/${product.id}`)}
+        >
           <BsEyeFill />
         </IconButton>
       </CardActions>

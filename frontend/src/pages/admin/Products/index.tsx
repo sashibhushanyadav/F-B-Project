@@ -48,7 +48,7 @@ const Products = () => {
   const [itemOffset, setItemOffset] = useState(0);
   const [pageCount, setPageCount] = useState(0);
 
-  let itemsPerPage = 8;
+  let itemsPerPage = 12;
   const [product, setProduct] = useState<any>({
     name: "",
     brand: "",
