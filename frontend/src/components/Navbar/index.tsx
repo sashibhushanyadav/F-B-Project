@@ -28,7 +28,7 @@ function NavbarComponent() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto d-flex align-items-center">
-            {role === "user" && <BsFillCartCheckFill />}
+            {role === "user" && <BsFillCartCheckFill size="1.5rem" />}
             <NavDropdown title={name} id="basic-nav-dropdown">
               <Button variant="secondary" className="w-100">
                 Profile
