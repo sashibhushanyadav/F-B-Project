@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getData } from "../../services/axios.service";
 import Loader from "../Loader";
 import NavbarComponent from "../Navbar";
@@ -12,11 +12,18 @@ import {
   Rating,
   Select,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../slice/productSlice";
+import { successToast } from "../../services/toaster.services";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
   const { productId } = useParams();
+  const [qty, setQty] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // console.log(
   //   window.location.pathname.slice(10, window.location.pathname.length)
@@ -32,6 +39,25 @@ const ProductDetail = () => {
     };
     getProductById();
   }, []);
+
+  const handleAddToCart = (quantity: any) => {
+    const data: any = payloadForCartItem(product.data, quantity);
+    dispatch(addToCart(data));
+    navigate("/cart");
+    successToast(data.productName + " added to cart successfully");
+  };
+
+  const payloadForCartItem = (data: any, qty: any) => {
+    return {
+      productId: data.id,
+      productName: data.name,
+      productImage: data.productImage,
+      price: data.price,
+      qty,
+      countInStock: data.countInStock,
+    };
+  };
+
   return (
     <>
       <NavbarComponent />{" "}
@@ -52,7 +78,11 @@ const ProductDetail = () => {
                 </Col>
                 <Col md={3}>
                   <ListGroup variant="flush">
-                    <ListGroup.Item>{product.data.name}</ListGroup.Item>
+                    <ListGroup.Item>
+                      <h4>
+                        <b>{product.data.name}</b>
+                      </h4>
+                    </ListGroup.Item>
                     <ListGroup.Item>
                       <Rating
                         name="read-only"
@@ -104,7 +134,8 @@ const ProductDetail = () => {
                               Choose Quantity
                             </InputLabel>
                             <Select
-                              value=""
+                              value={qty}
+                              onChange={(e) => setQty(e.target.value)}
                               label="Choose Quantity"
                               labelId="demo-simple-select-label"
                               id="demo-simple-select"
@@ -128,6 +159,7 @@ const ProductDetail = () => {
                         variant="contained"
                         fullWidth
                         disabled={product.data.countInStock == 0}
+                        onClick={() => handleAddToCart(qty)}
                       >
                         Add to Cart
                       </Button>
