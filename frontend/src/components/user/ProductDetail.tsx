@@ -15,6 +15,7 @@ import {
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../slice/productSlice";
 import { successToast } from "../../services/toaster.services";
+import { payloadForCartItem } from "../../helpers/product";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState<any>({});
@@ -45,17 +46,6 @@ const ProductDetail = () => {
     dispatch(addToCart(data));
     navigate("/cart");
     successToast(data.productName + " added to cart successfully");
-  };
-
-  const payloadForCartItem = (data: any, qty: any) => {
-    return {
-      productId: data.id,
-      productName: data.name,
-      productImage: data.productImage,
-      price: data.price,
-      qty,
-      countInStock: data.countInStock,
-    };
   };
 
   return (

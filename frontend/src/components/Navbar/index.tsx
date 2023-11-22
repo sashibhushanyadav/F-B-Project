@@ -3,17 +3,19 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slice/authSlice";
 import { successToast } from "../../services/toaster.services";
+import { IconButton } from "@mui/material";
 
 function NavbarComponent() {
   const { name, role } = useSelector((state: any) => {
     return state.auth;
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const logoutHandler = () => {
     localStorage.removeItem("persist:root");
     dispatch(logout());
@@ -28,7 +30,11 @@ function NavbarComponent() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto d-flex align-items-center">
-            {role === "user" && <BsFillCartCheckFill size="1.5rem" />}
+            {role === "user" && (
+              <IconButton color="inherit" onClick={(e) => navigate("/cart")}>
+                <BsFillCartCheckFill size="1.5rem" />
+              </IconButton>
+            )}
             <NavDropdown title={name} id="basic-nav-dropdown">
               <Button variant="secondary" className="w-100">
                 Profile
