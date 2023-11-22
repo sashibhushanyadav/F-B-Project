@@ -1,15 +1,23 @@
-import { Card, Container, IconButton, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  Card,
+  Container,
+  IconButton,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { Col, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import NavbarComponent from "../Navbar";
 import { removeFromCart } from "../../slice/productSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { successToast } from "../../services/toaster.services";
 import { BsFillCartCheckFill } from "react-icons/bs";
 
 const Cart = () => {
   const { cartItem } = useSelector((state: any) => state.product);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const returnTotalQuantity = () => {
     // let sum = 0;
     // cartItem.forEach((item: any) => {
@@ -54,7 +62,7 @@ const Cart = () => {
                           <span>{item.productName}</span>
                         </Col>
                         <Col md={2}>
-                          <span>{item.price}</span>
+                          <span>NPR. {item.price}</span>
                         </Col>
                         <Col md={2}>
                           <Select
@@ -84,7 +92,7 @@ const Cart = () => {
                               );
                             }}
                           >
-                            <BsFillCartCheckFill/>
+                            <BsFillCartCheckFill />
                           </IconButton>
                         </Col>
                       </Row>
@@ -103,12 +111,20 @@ const Cart = () => {
                       {returnTotalQuantity() === 1 ? "Item" : "Items"}
                     </h6>
                   </ListGroup.Item>
-                </ListGroup>
-                <ListGroup variant="flush">
                   <ListGroup.Item>
                     <h6>
                       <b>Total Price: </b>NPR. {returnTotalPrice()}
                     </h6>
+                  </ListGroup.Item>
+                  <ListGroup.Item className="text-center">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={cartItem.length === 0}
+                      onClick={() => navigate("/shipping")}
+                    >
+                      Proceed to checkout
+                    </Button>
                   </ListGroup.Item>
                 </ListGroup>
               </Card>

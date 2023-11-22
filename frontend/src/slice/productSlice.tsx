@@ -28,8 +28,12 @@ const productSlicce = createSlice({
         return cart.productId !== data.payload;
       });
     },
+    setShippingAddress: (state: any, data: any) => {
+      state.shippingAddress = data.payload;
+    },
   },
 });
 
 export default productSlicce.reducer;
-export const { addToCart, removeFromCart } = productSlicce.actions;
+export const { addToCart, removeFromCart, setShippingAddress } =
+  productSlicce.actions;

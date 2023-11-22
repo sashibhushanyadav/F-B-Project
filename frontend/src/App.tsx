@@ -9,6 +9,8 @@ import UserProducts from "./pages/user/Products";
 import AdminRoute from "./routes/AdminRoute";
 import ProductDetail from "./components/user/ProductDetail";
 import Cart from "./components/user/Cart";
+import CheckoutState from "./context/CheckoutState.tsx";
+import ParentContainer from "./pages/user/ParentContainer/index.tsx";
 
 function App() {
   return (
@@ -23,6 +25,15 @@ function App() {
           </Route>
           <Route path="/all/products" element={<UserProducts />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/checkout-steps"
+            element={
+              <CheckoutState>
+                <ParentContainer />
+              </CheckoutState>
+            }
+          />
           <Route path="/products/:productId" element={<ProductDetail />} />
         </Route>
 
