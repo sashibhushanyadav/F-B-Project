@@ -270,7 +270,7 @@ const Products = () => {
                         {product.name}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {product.price}
+                        NPR. {product.price}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {product.countInStock}

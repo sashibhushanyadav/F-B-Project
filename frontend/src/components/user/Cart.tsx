@@ -121,7 +121,7 @@ const Cart = () => {
                       variant="contained"
                       color="primary"
                       disabled={cartItem.length === 0}
-                      onClick={() => navigate("/shipping")}
+                      onClick={() => navigate("/checkout-steps")}
                     >
                       Proceed to checkout
                     </Button>
