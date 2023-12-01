@@ -59,7 +59,7 @@ const ProductList = ({ product, addProdToCart, removeProdToCart }: any) => {
             : product.description}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          ${product.price}
+          NPR. {product.price}
         </Typography>
         <Rating
           name="read-only"

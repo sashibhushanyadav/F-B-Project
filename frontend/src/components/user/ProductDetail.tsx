@@ -82,7 +82,7 @@ const ProductDetail = () => {
                       />
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <b>Price:</b>${product.data.price}
+                      <b>Price:</b> NPR. {product.data.price}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <b>Description:</b>
@@ -96,7 +96,7 @@ const ProductDetail = () => {
                       <Row>
                         <Col>Price</Col>
                         <Col>
-                          <strong>${product.data.price}</strong>
+                          <strong> NPR. {product.data.price}</strong>
                         </Col>
                       </Row>
                     </ListGroup.Item>

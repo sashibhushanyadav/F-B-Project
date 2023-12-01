@@ -11,6 +11,7 @@ import ProductDetail from "./components/user/ProductDetail";
 import Cart from "./components/user/Cart";
 import CheckoutState from "./context/CheckoutState.tsx";
 import ParentContainer from "./pages/user/ParentContainer/index.tsx";
+import Success from "./pages/Success/index.tsx";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             }
           />
           <Route path="/products/:productId" element={<ProductDetail />} />
+          <Route path="/payment/success" element={<Success />} />
         </Route>
 
         <Route path="*" element={<PageNotFound />} />

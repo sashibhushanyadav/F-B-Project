@@ -3,13 +3,10 @@ import { Row, Col, Form } from "react-bootstrap";
 import { TextField, Button } from "@mui/material";
 import { useState } from "react";
 import {
-  errorToast,
   successToast,
   warningToast,
 } from "../../../services/toaster.services";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { config } from "../../../config";
 import { postData } from "../../../services/axios.service";
 
 const SignUp = () => {
@@ -17,7 +14,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState("");
   const navigate = useNavigate();
 
   const registerSubmitHandler = async (e: any) => {

@@ -1,9 +1,10 @@
 import { Button, Card } from "@mui/material";
 import { Col, Image, ListGroup, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { config } from "../../../config";
 import { errorToast } from "../../../services/toaster.services";
 import axios from "axios";
+import { createOrder } from "../../../slice/orderSlice";
 
 const CheckoutStep = ({ setActiveStep }: any) => {
   const { cartItem, shippingAddress, paymentMethod } = useSelector(
@@ -11,6 +12,7 @@ const CheckoutStep = ({ setActiveStep }: any) => {
   );
 
   const { jwt } = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch();
 
   const returnTotalQuantity = () => {
     return cartItem.reduce((acc: any, item: any) => acc + item.qty, 0);
@@ -56,11 +58,42 @@ const CheckoutStep = ({ setActiveStep }: any) => {
           },
         }
       );
-      debugger;
+      if (data.status === "success") {
+        dispatch(createOrder(data.data));
+        paymentEsewa(data.data);
+      }
     } catch (error: any) {
       errorToast(error.response.data.error);
     }
   };
+  function paymentEsewa(order: any) {
+    let path = "https://uat.esewa.com.np/epay/main";
+    let params: any = {
+      amt: order.totalPrice,
+      psc: 0,
+      pdc: 0,
+      txAmt: 0,
+      tAmt: order.totalPrice,
+      pid: order._id,
+      scd: "EPAYTEST",
+      su: "http://localhost:5173/payment/success",
+      fu: "http://merchant.com.np/page/esewa_payment_failed",
+    };
+    let form = document.createElement("form");
+    form.setAttribute("method", "POST");
+    form.setAttribute("action", path);
+
+    for (var key in params) {
+      var hiddenField = document.createElement("input");
+      hiddenField.setAttribute("type", "hidden");
+      hiddenField.setAttribute("name", key);
+      hiddenField.setAttribute("value", params[key]);
+      form.appendChild(hiddenField);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+  }
   return (
     <>
       <Row className="mt-4">
